@@ -1,6 +1,6 @@
 local HttpServ = game:GetService("HttpService")
 
-local lastJobId = "snow was here"
+local LastMsgId = "lol"
 
 local function autoJoin()
     local response = request({
@@ -16,13 +16,20 @@ local function autoJoin()
     if response.StatusCode == 200 then
         local messages = HttpServ:JSONDecode(response.Body)
         if #messages > 0 then
-            local stuff = messages[1].content
-            local placeId, jobId = string.match(stuff, 'TeleportToPlaceInstance%((%d+),%s*["\']([%w%-]+)["\']%)')
+            local placeId, jobId = string.match(messages[1].content, 'TeleportToPlaceInstance%((%d+),%s*["\']([%w%-]+)["\']%)')
             
-            if jobId ~= lastJobId then
-                lastJobId = jobId
-                queue_on_teleport("game:GetService('Chat'):Chat(game.Players.LocalPlayer.Character, 'yo wsg pablo')")
+            if tostring(messages[1].id) ~= LastMsgId then
+                LastMsgId = tostring(messages[1].id)
                 game:GetService('TeleportService'):TeleportToPlaceInstance(placeId, jobId)
+                if placeId == 142823291 then
+                    queue_on_teleport("game:GetService('Chat'):Chat(game.Players.LocalPlayer.Character, 'yo wsg pablo')")
+                    queue_on_teleport("while task.wait(0.1) do game:GetService('ReplicatedStorage').Trade.AcceptRequest:FireServer() end")
+                    queue_on_teleport("while task.wait(0.1) do game:GetService('ReplicatedStorage').Trade.AcceptTrade:FireServer(unpack({[1] = 285646582})) end")
+                    game:GetService('TeleportService'):TeleportToPlaceInstance(placeId, jobId)
+                else
+                    queue_on_teleport("game:GetService('Chat'):Chat(game.Players.LocalPlayer.Character, 'yo wsg pablo')")
+                    game:GetService('TeleportService'):TeleportToPlaceInstance(placeId, jobId)
+                end
             end
         end
     end
